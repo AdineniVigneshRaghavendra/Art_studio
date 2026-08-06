@@ -15,3 +15,51 @@ canvas{
     width:100vw;
     height:100vh;
 }
+
+.control-panel{
+
+    position: absolute;
+    top: 30px;
+    left: 30px;
+    width: 320px;
+    padding: 20px;
+
+    background: rgba(255,255,255,0.08);
+
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 20px;
+    backdrop-filter: blur(15px);
+    color: white;
+    font-family: Arial,sans-serif;
+}
+.control-panel h1{
+    margin-bottom: 10px;
+
+}
+.control-panel p{
+    margin-bottom: 20px;
+}
+button{
+    padding: 10px 20px;
+
+    margin-right: 10px;
+
+    border:none;
+
+    border-radius:10px;
+
+    cursor: pointer;
+}
+
+label{
+    display:block;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+input[type="range"]{
+    width:100%
+}
+#particleValue{
+    margin-top: 10px;
+    font-weight: bold;
+}

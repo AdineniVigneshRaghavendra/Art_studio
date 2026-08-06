@@ -12,7 +12,26 @@ initial-scale=1.0">
     <body>
         <canvas id="artCanvas"></canvas>
 
+        <div class="control-panel">
+            <h1>My Art studio 😎</h1>
+            <p> Particle Simulation art 🎨</p>
+
+            <button id="pauseButton">Pause</button>
+
+            <button id="resumeButton">Resume</button>
+            <label for="particleSlider">Particles</label>
+            <input
+            type="range"
+            id="particleSlider"
+            min="50"
+            max="400"
+            value="200">
+
+            <p id="particleValue">200</p>
+        </div>
+
         <script src="script.js"></script>
+
     </body>
   
 </html>

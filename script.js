@@ -6,6 +6,30 @@ canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
 let particles = [];
+let animationPaused = false;
+let mouse = {
+    x: 0,
+    y: 0
+};
+const pauseButton = document.getElementById("pauseButton");
+const resumeButton = document.getElementById("resumeButton");
+
+const particleSlider = document.getElementById("particleSlider");
+const particleValue = document.getElementById("particleValue");
+
+pauseButton.addEventListener("click", function(){
+    animationPaused = true;
+});
+
+resumeButton.addEventListener("click", function(){
+    animationPaused = false;
+});
+
+
+canvas.addEventListener("mousemove", function(event){
+    mouse.x = event.clientX;
+    mouse.y = event.clientY;
+});
 
 function createParticle(x, y, radius, color){
     return{
@@ -18,16 +42,20 @@ function createParticle(x, y, radius, color){
     };
 }
 
-for(let i=0; i<200; i++)
-{
-    let particle = createParticle(
-     Math.random()*canvas.width,
-     Math.random()*canvas.height,
-     3 + Math.random() * 5,
-     "white"
-    );
+function generateParticles(count){
+    particles=[];
+    for(let i=0;i<count;i++){
+        let particle = createParticle(
+              Math.random()*canvas.width,
+              Math.random()*canvas.height,
+              3 + Math.random() * 5,
+              "white"
+        );
     particles.push(particle);
+    }
 }
+
+generateParticles(200);
 
 function drawParticles(){
     for(let i=0; i<particles.length; i++)
@@ -83,10 +111,22 @@ function updateParticles(){
         particles.x += particle.speedX;
 
         particle.y += particle.speedY;
+
+        let dx = mouse.x - particle.x;
+        let dy = mouse.y - particle.y;
+
+        let distance = Math.sqrt(dx * dx + dy*dy);
+
+        if (distance < 120){
+            particle.x += dx * 0.01;
+            particle.y += dy * 0.01;
+        }
     }
 }
 
 function animate(){
+
+    if(!animationPaused){
     ctx.fillStyle = "black";
 
     ctx.fillRect(0,0,canvas.width,canvas.height);
@@ -94,8 +134,16 @@ function animate(){
     updateParticles();
     drawParticles();
     connectParticles();
+    }
 
     requestAnimationFrame(animate);
 }
+
+particleSlider.addEventListener("input",function()
+{
+    particleValue.textContent = particleSlider.value;
+
+    generateParticles(Number(particleSlider.value));
+});
 
 animate();
