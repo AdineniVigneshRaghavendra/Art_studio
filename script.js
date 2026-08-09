@@ -13,9 +13,20 @@ let mouse = {
 };
 const pauseButton = document.getElementById("pauseButton");
 const resumeButton = document.getElementById("resumeButton");
+const randomButton = document.getElementById("randomButton")
 
 const particleSlider = document.getElementById("particleSlider");
 const particleValue = document.getElementById("particleValue");
+
+const speedSlider = document.getElementById("speedSlider");
+const speedValue = document.getElementById("speedValue");
+
+let particleSpeed = 2;
+
+const patternMode = document.getElementById("patternMode");
+
+let currentPattern = "normal";
+
 
 pauseButton.addEventListener("click", function(){
     animationPaused = true;
@@ -25,6 +36,18 @@ resumeButton.addEventListener("click", function(){
     animationPaused = false;
 });
 
+randomButton.addEventListener("click", function(){
+
+    generateParticles(Number(particleSlider.value));
+
+    let patterns = ["normal","galaxy","waves"];
+
+    let randomIndex = Math.floor(Math.random() * patterns.length);
+
+    currentPattern = patterns[randomIndex];
+
+    patternMode.value = currentPattern;
+});
 
 canvas.addEventListener("mousemove", function(event){
     mouse.x = event.clientX;
@@ -108,9 +131,9 @@ function updateParticles(){
     {
         let particle = particles[i];
 
-        particles.x += particle.speedX;
+        particle.x += particle.speedX * particleSpeed;
 
-        particle.y += particle.speedY;
+        particle.y += particle.speedY * particleSpeed;
 
         let dx = mouse.x - particle.x;
         let dy = mouse.y - particle.y;
@@ -124,6 +147,45 @@ function updateParticles(){
     }
 }
 
+function galaxyMovement() {
+    for(let i=0;i<particles.length; i++)
+    {
+        let particle = particles[i];
+
+        let centerX = canvas.width / 2;
+        let centerY = canvas.height / 2;
+
+        let dx = particle.x - centerX;
+        let dy = particle.y - centerY;
+
+        let distance = Math.sqrt(dx * dx + dy * dy);
+        let angle = Math.atan2(dy, dx);
+
+        angle += 0.002 * particleSpeed;
+
+        particle.x = centerX + Math.cos(angle) * distance;
+        particle.y = centerY + Math.sin(angle) * distance;
+    }
+}
+
+function waveMovement() {
+    for(let i=0;i<particles.length;i++)
+    {
+        let particle = particles[i];
+
+        particle.x += particle.speedX * particleSpeed;
+
+        particle.y = particle.y + Math.sin(particle.x * 0.01) * 0.5;
+
+        if(particle.x > canvas.width){
+            particle.x = 0;
+        }
+        if(particle.x < 0){
+            particle.x = canvas.width;
+        }
+    }
+}
+
 function animate(){
 
     if(!animationPaused){
@@ -131,7 +193,18 @@ function animate(){
 
     ctx.fillRect(0,0,canvas.width,canvas.height);
 
-    updateParticles();
+    if(currentPattern === "normal"){
+        
+        updateParticles();
+    }
+    else if(currentPattern === "galaxy"){
+
+        galaxyMovement();
+    }
+    else if(currentPattern === "waves"){
+        waveMovement();
+    }
+
     drawParticles();
     connectParticles();
     }
@@ -145,5 +218,18 @@ particleSlider.addEventListener("input",function()
 
     generateParticles(Number(particleSlider.value));
 });
+
+speedSlider.addEventListener("input",function(){
+    particleSpeed = Number(speedSlider.value);
+
+    speedValue.textContent = speedSlider.value;
+});
+
+patternMode.addEventListener("change", function(){
+
+    currentPattern = patternMode.value;
+});
+
+
 
 animate();

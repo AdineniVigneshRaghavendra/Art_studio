@@ -19,6 +19,7 @@ initial-scale=1.0">
             <button id="pauseButton">Pause</button>
 
             <button id="resumeButton">Resume</button>
+
             <label for="particleSlider">Particles</label>
             <input
             type="range"
@@ -28,6 +29,25 @@ initial-scale=1.0">
             value="200">
 
             <p id="particleValue">200</p>
+            
+            <label for="speedSlider">Speed</label>
+            <input
+                type="range"
+                id="speedSlider"
+                min="1"
+                max="10"
+                value="2">
+            <p id="speedValue">2</p>
+
+            <label for="patternMode">Pattern</label>
+
+            <select id="patternMode">
+                <option value="normal">✨ Particle Network</option>
+                <option value="galaxy">🌌 Galaxy</option>
+                <option value="waves">🏄‍♀️ Waves</option>
+            </select>
+
+            <button id="randomButton">🎲Randomize</button>
         </div>
 
         <script src="script.js"></script>
