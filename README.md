@@ -111,7 +111,7 @@ There are still a lot of things I want to experiment with:
 * 🌌 Click-to-create galaxies
 * 🕳️ Gravity effects
 
-## 📸 Preview
+
 ## 📸 Preview
 
 ![Generative Art Studio](preview.png)
