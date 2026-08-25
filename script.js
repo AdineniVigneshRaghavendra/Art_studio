@@ -13,7 +13,9 @@ let mouse = {
 };
 const pauseButton = document.getElementById("pauseButton");
 const resumeButton = document.getElementById("resumeButton");
-const randomButton = document.getElementById("randomButton")
+const randomButton = document.getElementById("randomButton");
+const saveButton = document.getElementById("saveButton");
+const resetButton = document.getElementById("resetButton");
 
 const particleSlider = document.getElementById("particleSlider");
 const particleValue = document.getElementById("particleValue");
@@ -40,7 +42,7 @@ randomButton.addEventListener("click", function(){
 
     generateParticles(Number(particleSlider.value));
 
-    let patterns = ["normal","galaxy","waves"];
+    let patterns = ["normal","galaxy","waves","spiral","fireflies"];
 
     let randomIndex = Math.floor(Math.random() * patterns.length);
 
@@ -186,6 +188,60 @@ function waveMovement() {
     }
 }
 
+function spiralMovement(){
+
+    for(let i=0;i<particles.length;i++)
+    {
+        let particle = particles[i];
+
+        let centerX = canvas.width / 2;
+        let centerY = canvas.height / 2;
+
+        let dx = particle.x - centerX;
+        let dy = particle.y - centerY;
+
+        let distance = Math.sqrt(dx * dx + dy * dy);
+
+        let angle = Math.atan2(dy , dx);
+
+        angle += 0.01 * particleSpeed;
+
+        distance -= 0.15 * particleSpeed;
+
+        if(distance < 20){
+            distance = 350;
+        }
+
+        particle.x = centerX + Math.cos(angle) * distance;
+        particle.y = centerY + Math.sin(angle) * distance;
+    }
+}
+
+function fireflyMovement() {
+    for(let i=0;i<particles.length;i++)
+    {
+        let particle = particles[i];
+
+        particle.x += particle.speedX * 0.3 * particleSpeed;
+        particle.y += particle.speedY * 0.3 * particleSpeed;
+
+
+        if(particle.x < 0){
+            particle.x = canvas.width;
+        }
+
+        if(particle.x > canvas.width){
+            particle.x = 0;
+        }
+        if(particle.y < 0){
+            particle.y = canvas.height;
+        }
+        if(particle.y > canvas.height){
+            particle.y = 0;
+        }
+    }
+}
+
 function animate(){
 
     if(!animationPaused){
@@ -203,6 +259,14 @@ function animate(){
     }
     else if(currentPattern === "waves"){
         waveMovement();
+    }
+    else if(currentPattern === "spiral"){
+
+        spiralMovement();
+    }
+    else if(currentPattern === "fireflies"){
+
+        fireflyMovement();
     }
 
     drawParticles();
@@ -230,6 +294,36 @@ patternMode.addEventListener("change", function(){
     currentPattern = patternMode.value;
 });
 
+saveButton.addEventListener("click", function(){
 
+    let image = canvas.toDataURL("image/png");
+
+    let link = document.createElement("a");
+
+    link.download = "my-art.png";
+
+    link.href = image;
+
+    link.click();
+})
+
+resetButton.addEventListener("click", function(){
+
+    particleSlider.value = 200;
+    particleValue.textContent = "200";
+
+    speedSlider.value = 2;
+    speedValue.textContent = "2";
+
+    particleSpeed = 2;
+
+    currentPattern = "normal";
+
+    patternMode.value = "normal";
+
+    animationPaused = false;
+
+    generateParticles(200);
+});
 
 animate();
